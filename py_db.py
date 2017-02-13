@@ -15,7 +15,7 @@ class DataBase:
     def create_versions(self):
         self.use_db()
         self.connect.execute('CREATE TABLE `versions`(`id` INTEGER(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, `description` VARCHAR(15) NOT NULL ) ENGINE=InnoDB COLLATE=utf8_unicode_ci;')
-    def create_test_case(self):
+    def create_test_cases(self):
         self.use_db()
         self.connect.execute('CREATE TABLE `test_cases`(`id` INTEGER(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, `subsystem_id` INTEGER(11) NOT NULL, `version_id` INTEGER(11) NOT NULL, `description` VARCHAR(15) NOT NULL, CONSTRAINT `fk_1` FOREIGN KEY (`subsystem_id`) REFERENCES subsystems (`id`),  CONSTRAINT `fk_2` FOREIGN KEY (`version_id`) REFERENCES versions (`id`)) ENGINE=InnoDB COLLATE=utf8_unicode_ci;')
     def select_id_reverse(self, table_name):

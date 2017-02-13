@@ -42,13 +42,19 @@ def main():
 	        if file.endswith(".xlsx"):
 	            workbook = xlrd.open_workbook(path + "/" + file)            
 	            version = Version(file[0:12])            
+                    # insert version
 	            for i in range(0, workbook.nsheets - 1):
 	            	sheet = workbook.sheet_by_index(i) 				
 	            	subsystem = SubSystem(sheet.name)
+
+                        # insert subsystem?
 	            	version._sub_systems.append(subsystem)            	
 	            	for row in range(0, sheet.nrows):
 	            		test = TestCase(sheet.cell(row, 0).value)
 	            		subsystem._test_cases.append(test)
+
+                                # subsystems = py_db.DataBase.select_id_reverse(self, 'subsystems')?
+                                # versions = py_db.DataBase.select_id_reverse(self, 'versions')?
 	           		#print (subsystem)
 	            #print ("################################")
 	            #print (version._name)	         
