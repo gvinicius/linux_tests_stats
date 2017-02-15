@@ -1,3 +1,4 @@
+""" This only drops the db.  """
 import py_db
 
 def main():

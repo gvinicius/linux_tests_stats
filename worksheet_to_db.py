@@ -30,28 +30,27 @@ class Test_case:
 
 """ Method the implements the conversion """
 def main():
-    db = py_db.DataBase()
+    data_base = py_db.DataBase()
     for path, subdirs, files in os.walk(root):    
         for file in files:        
             if file.endswith(".xlsx"):
                 workbook = xlrd.open_workbook(path + "/" + file)
                 version = Version(file[0:12])
-                version_id = db.insert_common('versions', version._name)
+                version_id = data_base.insert_common('versions', version._name)
                 for i in range(0, workbook.nsheets - 1):
                     sheet = workbook.sheet_by_index(i)	
                     subsystem = Subsystem(sheet.name)
-                    subsystem_id = db.insert_common('subsystems', subsystem._name)
+                    subsystem_id = data_base.insert_common('subsystems', subsystem._name)
                     version._subsystems.append(subsystem)
                     for row in range(0, sheet.nrows):
-                        tc = Test_case(sheet.cell(row, 0).value)
+                        test_case = Test_case(sheet.cell(row, 0).value)
                         subsystem._test_cases.append(tc)
-                        # db.insert_test_case(description, subsystem_id, version_id, loc)
-                        db.insert_test_case(tc._name, subsystem_id, version_id, 1)
+                        # data_base.insert_test_case(description, subsystem_id, version_id, loc)
+                        data_base.insert_test_case(test_case._name, subsystem_id, version_id, 1)
                         #print (subsystem)
                 #print ("################################")
                 #print (version._name)	         
-    db.connection.close()
+    data_base.connect.close()
 
 if __name__ == "__main__":
-	main()
-            
+    main()        

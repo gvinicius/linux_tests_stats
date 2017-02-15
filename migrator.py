@@ -1,11 +1,12 @@
 import py_db
 
 def main():
-    db = py_db.DataBase()
-    db.create_schema()
-    db.create_subsystems()
-    db.create_versions()
-    db.create_test_cases()
+    data_base = py_db.DataBase()
+    data_base.create_schema()
+    data_base.create_subsystems()
+    data_base.create_versions()
+    data_base.create_test_cases()
+    data_base.connect.close()
 
 if __name__ == "__main__":
-	main()
+    main()
