@@ -18,7 +18,10 @@ class DataBase:
         self.connect.execute('CREATE TABLE `versions`(`id` INTEGER(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, `description` VARCHAR(15) NOT NULL UNIQUE) ENGINE=InnoDB COLLATE=utf8_unicode_ci;')
     def create_test_cases(self):
         self.use_db()
-        self.connect.execute('CREATE TABLE `test_cases`(`id` INTEGER(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, `subsystem_id` INTEGER(11) NOT NULL, `version_id` INTEGER(11) NOT NULL, `description` VARCHAR(15) NOT NULL UNIQUE, `lines_of_code` INTEGER(4) NOT NULL, CONSTRAINT `fk_1` FOREIGN KEY (`subsystem_id`) REFERENCES subsystems (`id`),  CONSTRAINT `fk_2` FOREIGN KEY (`version_id`) REFERENCES versions (`id`)) ENGINE=InnoDB COLLATE=utf8_unicode_ci;')
+        self.connect.execute('CREATE TABLE `test_cases`(`id` INTEGER(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, `description` VARCHAR(15) NOT NULL UNIQUE) ENGINE=InnoDB COLLATE=utf8_unicode_ci;')
+    def create_test_case_subsystem_versions(self):
+        self.use_db()
+        self.connect.execute('CREATE TABLE `test_case_subsystem_versions`(`subsystem_id` INTEGER(11) NOT NULL, `version_id` INTEGER(11) NOT NULL, `test_case_id` INTEGER(11) NOT NULL, `lines_of_code` INTEGER(4) NOT NULL, PRIMARY KEY (`subsystem_id`, `version_id`, `test_case_id`), CONSTRAINT `fk_1` FOREIGN KEY (`subsystem_id`) REFERENCES subsystems (`id`),  CONSTRAINT `fk_2` FOREIGN KEY (`version_id`) REFERENCES versions (`id`),  CONSTRAINT `fk_3` FOREIGN KEY (`test_case_id`) REFERENCES test_cases (`id`)) ENGINE=InnoDB COLLATE=utf8_unicode_ci;')
     def insert_common(self, table_name, description):
         id = 0
         self.use_db()
@@ -29,9 +32,9 @@ class DataBase:
         #for row in result:
         #    id = row['id']
         return result.fetchone()[0]
-    def insert_test_case(self, description, subsystem_id, version_id, loc):
+    def insert_test_case_subsystem_version(self, description, subsystem_id, version_id, loc):
         self.use_db()
-        self.connect.execute('INSERT INTO `test_cases` (`description`, `subsystem_id`, `version_id`, `lines_of_code`) VALUES ("{0}", "{1}", "{2}", "{3}");'.format(description, subsystem_id, version_id, loc))
+        self.connect.execute('INSERT INTO `test_cases_` (`description`, `subsystem_id`, `version_id`, `lines_of_code`) VALUES ("{0}", "{1}", "{2}", "{3}");'.format(test_case_id, subsystem_id, version_id, loc))
     def drop(self):
         self.connect.execute("DROP DATABASE `linux_tests`;")
 
