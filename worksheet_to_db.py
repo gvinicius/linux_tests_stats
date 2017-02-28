@@ -44,12 +44,9 @@ def main():
                     version._subsystems.append(subsystem)
                     for row in range(0, sheet.nrows):
                         test_case = Test_case(sheet.cell(row, 0).value)
+                        test_case_id = data_base.insert_common('test_cases', test_case._name)
                         subsystem._test_cases.append(test_case)
-                        # data_base.insert_test_case(description, subsystem_id, version_id, loc)
-                        data_base.insert_test_case(test_case._name, subsystem_id, version_id, 1)
-                        #print (subsystem)
-                #print ("################################")
-                #print (version._name)	         
+                        data_base.insert_test_case_subsystem_versions(test_case_id, subsystem_id, version_id, 1)
     data_base.connect.close()
 
 if __name__ == "__main__":
