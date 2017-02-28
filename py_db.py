@@ -25,16 +25,16 @@ class DataBase:
     def insert_common(self, table_name, description):
         id = 0
         self.use_db()
-        result =  self.connect.execute('SELECT `id` FROM {0} WHERE `description` LIKE "{1}";'.format(table_name, description))
-        if result.fetchone() is None:
+        result =  self.connect.execute('select COALESCE((SELECT `id` FROM {0} WHERE `description` LIKE "{1}"),0) AS `id` ;'.format(table_name, description))
+        if result.fetchone()['id'] == 0:
             self.connect.execute('INSERT INTO {0} (`description`) VALUES ("{1}");'.format(table_name, description))
             result = self.connect.execute('select LAST_INSERT_ID() AS `id`;')
         #for row in result:
         #    id = row['id']
-        return result.fetchone()[0]
-    def insert_test_case_subsystem_version(self, description, subsystem_id, version_id, loc):
+        return result.fetchone()['id']
+    def insert_test_case_subsystem_version(self, test_case_id, subsystem_id, version_id, loc):
         self.use_db()
-        self.connect.execute('INSERT INTO `test_cases_` (`description`, `subsystem_id`, `version_id`, `lines_of_code`) VALUES ("{0}", "{1}", "{2}", "{3}");'.format(test_case_id, subsystem_id, version_id, loc))
+        self.connect.execute('INSERT INTO `test_case_subsystem_versions` (`test_case_id`, `subsystem_id`, `version_id`, `lines_of_code`) VALUES ("{0}", "{1}", "{2}", "{3}");'.format(test_case_id, subsystem_id, version_id, loc))
     def drop(self):
         self.connect.execute("DROP DATABASE `linux_tests`;")
 
