@@ -44,7 +44,7 @@ def main():
                     version._subsystems.append(subsystem)
                     for row in range(0, sheet.nrows):
                         test_case = Test_case(sheet.cell(row, 0).value)
-                        subsystem._test_cases.append(tc)
+                        subsystem._test_cases.append(test_case)
                         # data_base.insert_test_case(description, subsystem_id, version_id, loc)
                         data_base.insert_test_case(test_case._name, subsystem_id, version_id, 1)
                         #print (subsystem)
