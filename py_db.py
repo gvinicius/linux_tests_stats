@@ -24,17 +24,20 @@ class DataBase:
         self.connect.execute('CREATE TABLE `test_case_subsystem_versions`(`subsystem_id` INTEGER(11) NOT NULL, `version_id` INTEGER(11) NOT NULL, `test_case_id` INTEGER(11) NOT NULL, `lines_of_code` INTEGER(4) NOT NULL, PRIMARY KEY (`subsystem_id`, `version_id`, `test_case_id`), CONSTRAINT `fk_1` FOREIGN KEY (`subsystem_id`) REFERENCES subsystems (`id`),  CONSTRAINT `fk_2` FOREIGN KEY (`version_id`) REFERENCES versions (`id`),  CONSTRAINT `fk_3` FOREIGN KEY (`test_case_id`) REFERENCES test_cases (`id`)) ENGINE=InnoDB COLLATE=utf8_unicode_ci;')
     def insert_common(self, table_name, description):
         self.use_db()
-        result =  self.connect.execute('select COALESCE((SELECT `id` FROM {0} WHERE `description` LIKE "{1}"),0) AS `id` ;'.format(table_name, description))
-        id = result.fetchone()[0] 
-        if id == 0:
+        result =  self.connect.execute('SELECT `id` FROM {0} WHERE `description` = "{1}";'.format(table_name, description))
+        id = result.fetchone()
+        if id is None:
             self.connect.execute('INSERT INTO {0} (`description`) VALUES ("{1}");'.format(table_name, description))
-            result = self.connect.execute('select LAST_INSERT_ID() AS `id`;')
+            result_insert = self.connect.execute('select LAST_INSERT_ID() AS `id`;')
+            id = result_insert.fetchone()[0]
         #for row in result:
         #    id = row['id']
+        else:
+            id = id[0]
         return id
     def insert_test_case_subsystem_version(self, test_case_id, subsystem_id, version_id, loc):
         self.use_db()
         self.connect.execute('INSERT INTO `test_case_subsystem_versions` (`test_case_id`, `subsystem_id`, `version_id`, `lines_of_code`) VALUES ("{0}", "{1}", "{2}", "{3}");'.format(test_case_id, subsystem_id, version_id, loc))
     def drop(self):
-        self.connect.execute("DROP DATABASE `linux_tests`;")
+        self.connect.execute("DROP DATABASE IF EXISTS `linux_tests`;")
 
